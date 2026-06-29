@@ -13,7 +13,37 @@ const PORT = process.env.PORT || 3020;
 const OUTPUT_DIR = process.env.OUTPUT_DIR || path.join(__dirname, '../output');
 fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
+// ── Bezpečnostní hlavičky (Helmet) ──────────────────────────────────────────
+try {
+  const helmet = require('helmet');
+  app.use(helmet({
+    contentSecurityPolicy: false, // uvolnit kvůli inline stylům a CDN fontům
+    frameguard: false,            // umožnit embed do iframe e-shopu
+  }));
+} catch {
+  console.warn('⚠  Helmet není nainstalovaný – spusťte npm install');
+}
+
+// ── CORS – povoluje všechny origins (open-source, multi-tenant deployment) ──
 app.use(cors());
+
+// ── Rate limiting na AI endpointy ───────────────────────────────────────────
+try {
+  const { rateLimit } = require('express-rate-limit');
+  const windowMs = parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 60 * 1000;
+  const maxReq   = parseInt(process.env.RATE_LIMIT_MAX, 10) || 10;
+  const limiter = rateLimit({
+    windowMs,
+    max: maxReq,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Příliš mnoho požadavků, zkuste za chvíli.' },
+  });
+  app.use('/api/chat/generate', limiter);
+  app.use('/api/approve', limiter);
+} catch {
+  console.warn('⚠  express-rate-limit není nainstalovaný – spusťte npm install');
+}
 
 app.use('/api', (req, res, next) => {
   res.charset = 'utf-8';
@@ -45,8 +75,8 @@ app.use(express.static(path.join(__dirname, '../public'), {
     }
   },
 }));
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use('/api/chat', chatRoutes);
 app.use('/api/approve', approveRoutes);
 
@@ -57,7 +87,7 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`AI Konfigurátor běží na http://localhost:${PORT}`);
   console.log(`Output PDF: ${OUTPUT_DIR}`);
   if (hasOpenAIKey()) {
@@ -69,3 +99,15 @@ app.listen(PORT, () => {
     console.log('   Gemini API klíč: https://aistudio.google.com/apikey');
   }
 });
+
+// ── Graceful shutdown ────────────────────────────────────────────────────────
+const shutdown = (signal) => {
+  console.log(`\n${signal} přijat – ukončuji server...`);
+  server.close(() => {
+    console.log('Server ukončen.');
+    process.exit(0);
+  });
+  setTimeout(() => process.exit(1), 10000); // force exit po 10s
+};
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT',  () => shutdown('SIGINT'));

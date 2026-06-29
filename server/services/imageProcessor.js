@@ -171,7 +171,7 @@ async function processForPrint(inputBuffer, widthCm, heightCm, outputDir) {
     .png({ compressionLevel: PNG_COMPRESSION })
     .toBuffer();
 
-  const randomId = Array.from({ length: 8 }, () => Math.floor(Math.random() * 10)).join('');
+  const randomId = require('crypto').randomBytes(4).toString('hex');
   const baseName = `Data z Factoryshop.cz-${randomId}`;
   const filename = `${baseName}.pdf`;
   const filepath = path.join(outputDir, filename);

@@ -6,7 +6,7 @@ const MAX_GENERATIONS_PER_DAY = rawLimit === '0' || rawLimit === '' ? 0 : (parse
 async function checkRateLimit(sessionId) {
   // 0 = bez limitu (pro testování)
   if (MAX_GENERATIONS_PER_DAY === 0) return { allowed: true, remaining: null };
-  if (!sessionId) return { allowed: true, remaining: MAX_GENERATIONS_PER_DAY };
+  if (!sessionId) return { allowed: false, remaining: 0 };
   try {
     const result = await db.query(
     `SELECT COUNT(*)::int as count FROM generation_log 

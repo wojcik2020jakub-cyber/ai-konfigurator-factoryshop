@@ -49,10 +49,22 @@ router.post('/generate', upload.single('logo'), async (req, res) => {
       return res.status(400).json({ error: 'Chybí prompt, widthCm nebo heightCm' });
     }
 
+    // Validace délky promptu
+    if (typeof prompt !== 'string' || prompt.trim().length === 0) {
+      return res.status(400).json({ error: 'Prompt nesmí být prázdný' });
+    }
+    const MAX_PROMPT_LENGTH = parseInt(process.env.MAX_PROMPT_LENGTH, 10) || 2000;
+    if (prompt.length > MAX_PROMPT_LENGTH) {
+      return res.status(400).json({ error: `Popis je příliš dlouhý (max ${MAX_PROMPT_LENGTH} znaků)` });
+    }
+
     const w = Number(widthCm);
     const h = Number(heightCm);
     if (w <= 0 || h <= 0 || !Number.isFinite(w) || !Number.isFinite(h)) {
       return res.status(400).json({ error: 'Rozměry musí být kladná čísla' });
+    }
+    if (w > 2000 || h > 2000) {
+      return res.status(400).json({ error: 'Rozměry nesmí přesáhnout 2000 cm' });
     }
 
     const rateLimit = await checkRateLimit(sessionId);

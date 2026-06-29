@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout kódu
+        uses: actions/checkout@v4
+
+      - name: Nastavení Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Instalace závislostí
+        run: npm ci
+
+      - name: Kontrola syntaxe serveru
+        run: node --check server/index.js server/routes/chat.js server/routes/approve.js server/services/ai.js server/services/imageProcessor.js
+
+      - name: Spuštění serveru v demo režimu (smoke test)
+        run: |
+          node server/index.js &
+          SERVER_PID=$!
+          sleep 4
+          curl -sf http://localhost:3020/api/health | grep '"status":"ok"'
+          kill $SERVER_PID
+        env:
+          PORT: 3020
+          NODE_ENV: test
+          # Záměrně bez API klíčů – testuje demo režim
