@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>AI Konfigurátor bannerů | Factoryshop.cz</title>
+  <title>AI Konfigurátor produktů</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -11,9 +11,14 @@
 </head>
 <body>
   <header class="header">
-    <img src="images/logo.png" alt="" class="header-logo-img">
-    <span class="header-logo">Factoryshop.cz</span>
-    <span class="header-badge">AI Konfigurátor</span>
+    <svg class="header-logo-img" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <rect x="2" y="7" width="23" height="19" rx="3" stroke="white" stroke-width="2.2"/>
+      <line x1="7" y1="14" x2="20" y2="14" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+      <line x1="7" y1="19" x2="14" y2="19" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M29 2 L30.4 6 L34 7.2 L30.4 8.4 L29 12.4 L27.6 8.4 L24 7.2 L27.6 6 Z" fill="white"/>
+    </svg>
+    <span class="header-logo">AI Konfigurátor</span>
+    <span class="header-badge">produkt</span>
   </header>
   <main class="container">
     <div class="layout layout-stacked">
@@ -33,7 +38,7 @@
         </div>
         <div class="preview-area" id="previewArea">
           <span class="preview-placeholder" id="previewPlaceholder">Náhled se zobrazí po vygenerování návrhu.<br>Poměr stran odpovídá zvoleným rozměrům.</span>
-          <img class="preview-image" id="previewImage" alt="Náhled banneru" style="display: none;">
+          <img class="preview-image" id="previewImage" alt="Náhled produktu" style="display: none;">
           <div class="safe-zone-overlay" id="safeZoneOverlay" aria-hidden="true">
             <div class="safe-zone-frame" id="safeZoneFrame"></div>
           </div>
@@ -69,21 +74,21 @@
           <div class="msg msg-ai" data-role="ai">
             <div class="msg-avatar">AI</div>
             <div class="msg-content">
-              Ahoj! Jsem tu, abych ti pomohl navrhnout banner pro velkoplošný tisk. Popiš mi, jak má banner vypadat – barvy, text, obrázky. Rozměry zvolíš výše. Výstup bude v tiskové kvalitě (PDF). Po vygenerování můžeš psát dílčí úpravy (např. „posuň logo doleva“).
+              Ahoj! Jsem tu, abych ti pomohl navrhnout produkt pro tisk. Popiš mi, jak má vypadat – barvy, text, obrázky. Rozměry zvolíš výše. Výstup bude v tiskové kvalitě (PDF). Po vygenerování můžeš psát dílčí úpravy (např. „posuň logo doleva”).
             </div>
           </div>
         </div>
         <div class="chat-input-area">
           <div class="chat-attachment" id="chatAttachment"></div>
           <div class="chat-input-actions">
-            <button type="button" class="btn btn-new-banner" id="newBannerBtn" title="Zahájit nový banner od začátku">Nový banner</button>
+            <button type="button" class="btn btn-new-banner" id="newBannerBtn" title="Zahájit nový návrh od začátku">Nový návrh</button>
           </div>
           <div class="chat-input-wrap">
             <label class="btn-attach" for="fileInput" title="Připojit soubor (logo, obrázek)">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
             </label>
             <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden">
-            <textarea class="chat-input" id="chatInput" placeholder="Popiš svůj návrh banneru… Můžete připojit logo nebo obrázek." rows="2"></textarea>
+            <textarea class="chat-input" id="chatInput" placeholder="Popiš svůj návrh produktu… Můžete připojit logo nebo obrázek." rows="2"></textarea>
             <button class="btn btn-primary" id="sendBtn">Odeslat</button>
           </div>
         </div>
@@ -103,7 +108,7 @@
     <div class="return-modal-backdrop"></div>
     <div class="return-modal-content" role="dialog" aria-labelledby="returnModalTitle">
       <h3 class="return-modal-title" id="returnModalTitle"></h3>
-      <p class="return-modal-question">Chcete se vrátit zpět do obchodu Factoryshop.cz?</p>
+      <p class="return-modal-question">Chcete se vrátit zpět do obchodu?</p>
       <div class="return-modal-actions">
         <button type="button" class="btn btn-primary" id="returnModalYes">Ano</button>
         <button type="button" class="btn btn-secondary" id="returnModalNo">Ne</button>

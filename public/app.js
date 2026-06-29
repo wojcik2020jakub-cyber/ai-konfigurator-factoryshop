@@ -47,7 +47,7 @@ function getReturnToShopUrl() {
   return returnToShopUrl;
 }
 
-const DEFAULT_WELCOME = `Ahoj! Jsem tu, abych ti pomohl navrhnout banner pro velkoplošný tisk. Popiš mi, jak má banner vypadat – barvy, text, obrázky. Rozměry zvolíš výše. Výstup bude v tiskové kvalitě (PDF).`;
+const DEFAULT_WELCOME = `Ahoj! Jsem tu, abych ti pomohl navrhnout produkt pro tisk. Popiš mi, jak má vypadat – barvy, text, obrázky. Rozměry zvolíš výše. Výstup bude v tiskové kvalitě (PDF).`;
 
 let initialWelcomeHtml = '';
 function getInitialWelcomeHtml() {
