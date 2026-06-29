@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vizualizace funkcí – AI Konfigurátor bannerů | Factoryshop.cz</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red: #c41e3a;
+  --red-light: #e63950;
+  --red-dark: #a01830;
+  --black: #111111;
+  --white: #ffffff;
+  --gray-50: #f9f9f9;
+  --gray-100: #f2f2f2;
+  --gray-200: #e5e5e5;
+  --gray-400: #9ca3af;
+  --gray-600: #6b6b6b;
+  --gray-800: #333333;
+  --green: #16a34a;
+  --blue: #2563eb;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.14);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #f0f0f0;
+  color: var(--black);
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, #1a0a0e 0%, var(--red-dark) 40%, var(--red) 100%);
+  color: white;
+  padding: 56px 40px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.05) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.04) 0%, transparent 50%);
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 99px;
+  padding: 5px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-size: clamp(28px, 5vw, 52px);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+.hero h1 span { color: rgba(255,255,255,0.65); }
+.hero p {
+  font-size: 17px;
+  opacity: 0.8;
+  max-width: 560px;
+  margin: 0 auto 32px;
+  line-height: 1.6;
+}
+.hero-chips { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.chip {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 99px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ── NAV DOTS ── */
+.nav-bar {
+  background: white;
+  border-bottom: 1px solid var(--gray-200);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.nav-btn {
+  flex-shrink: 0;
+  padding: 14px 16px;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-600);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.nav-btn:hover { color: var(--red); }
+.nav-btn.active { color: var(--red); border-bottom-color: var(--red); font-weight: 600; }
+
+/* ── SECTIONS ── */
+.sections { max-width: 1100px; margin: 0 auto; padding: 40px 24px; display: flex; flex-direction: column; gap: 48px; }
+
+.feature-section {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.feature-section.visible { opacity: 1; transform: translateY(0); }
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 28px 32px 0;
+}
+.section-icon {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.section-meta { flex: 1; }
+.section-num {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 4px;
+}
+.section-title { font-size: 20px; font-weight: 700; color: var(--black); margin-bottom: 6px; }
+.section-desc { font-size: 14px; color: var(--gray-600); line-height: 1.6; }
+
+.demo-area { padding: 24px 32px 32px; }
+
+/* ── DEMO: CHAT ── */
+.chat-demo { display: flex; flex-direction: column; gap: 12px; }
+.chat-bubble {
+  display: flex; gap: 10px; align-items: flex-start;
+  opacity: 0; transform: translateX(-10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.chat-bubble.user { flex-direction: row-reverse; }
+.chat-bubble.user { transform: translateX(10px); }
+.chat-bubble.show { opacity: 1; transform: translateX(0); }
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
+.avatar-ai { background: var(--red); color: white; }
+.avatar-user { background: var(--black); color: white; }
+.bubble-text {
+  background: var(--gray-100);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.55;
+  max-width: 75%;
+}
+.chat-bubble.user .bubble-text { background: var(--red); color: white; border-radius: 12px 4px 12px 12px; }
+.chat-bubble:not(.user) .bubble-text { border-radius: 4px 12px 12px 12px; }
+.typing { display: flex; gap: 4px; align-items: center; padding: 4px 2px; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gray-400); animation: blink 1.2s infinite; }
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink { 0%,80%,100%{opacity:0.3} 40%{opacity:1} }
+
+.chat-input-mock {
+  display: flex; gap: 8px; align-items: center;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--gray-400);
+}
+.send-btn-mock {
+  margin-left: auto;
+  background: var(--red);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: default;
+}
+
+/* ── DEMO: DIMENSIONS ── */
+.dim-demo {
+  display: flex; gap: 24px; align-items: center; flex-wrap: wrap;
+}
+.dim-inputs { display: flex; gap: 16px; flex-wrap: wrap; }
+.dim-field { display: flex; flex-direction: column; gap: 6px; }
+.dim-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-600); }
+.dim-input-mock {
+  border: 2px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 18px;
+  font-weight: 700;
+  width: 110px;
+  color: var(--black);
+  text-align: center;
+  transition: border-color 0.3s;
+}
+.dim-input-mock.focus { border-color: var(--red); box-shadow: 0 0 0 3px rgba(196,30,58,0.12); }
+
+.banner-preview-shape {
+  border: 2px solid var(--gray-200);
+  border-radius: 6px;
+  background: linear-gradient(135deg, #f8f8f8, #efefef);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gray-400);
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+.banner-preview-shape::after {
+  content: '';
+  position: absolute; inset: 8px;
+  border: 1px dashed rgba(196,30,58,0.25);
+  border-radius: 4px;
+}
+.ratio-label {
+  background: white;
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-600);
+}
+
+/* ── DEMO: GENERATION ── */
+.generation-demo {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start;
+}
+@media (max-width: 640px) { .generation-demo { grid-template-columns: 1fr; } }
+.gen-steps { display: flex; flex-direction: column; gap: 12px; }
+.gen-step {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--gray-200);
+  background: var(--gray-50);
+  transition: all 0.3s;
+}
+.gen-step.active {
+  border-color: var(--red);
+  background: rgba(196,30,58,0.04);
+  box-shadow: 0 0 0 2px rgba(196,30,58,0.08);
+}
+.gen-step.done { border-color: var(--green); background: rgba(22,163,74,0.04); }
+.step-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.step-text { font-size: 13px; font-weight: 500; color: var(--black); }
+.step-sub { font-size: 12px; color: var(--gray-600); margin-top: 2px; }
+
+.gen-preview-wrap {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+  aspect-ratio: 2/3;
+  position: relative;
+  background: var(--gray-100);
+}
+.gen-preview-inner {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: var(--gray-400);
+  position: relative;
+}
+.gen-progress-bar {
+  position: absolute; bottom: 0; left: 0; height: 3px;
+  background: var(--red);
+  transition: width 3s ease;
+  border-radius: 0 2px 0 0;
+}
+.mock-banner-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.mock-banner-canvas {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px;
+  background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: white; text-align: center; padding: 20px;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.mock-banner-canvas.show { opacity: 1; }
+.mock-banner-text-big { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+.mock-banner-text-sub { font-size: 11px; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.1em; }
+.mock-banner-red-stripe { width: 40%; height: 3px; background: var(--red); border-radius: 2px; margin: 6px 0; }
+.mock-banner-cta {
+  background: var(--red); color: white;
+  padding: 6px 16px; border-radius: 6px;
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+
+/* ── DEMO: SAFE ZONE ── */
+.safe-zone-demo {
+  display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap;
+}
+.safe-zone-visual {
+  flex: 0 0 200px;
+  aspect-ratio: 2/3;
+  border: 2px solid var(--gray-200);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+.safe-zone-overlay-demo {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.safe-zone-overlay-demo.show { opacity: 1; }
+.safe-zone-frame-demo {
+  position: absolute;
+  inset: 12%;
+  border: 2px dashed rgba(255,255,0,0.7);
+  border-radius: 2px;
+}
+.safe-zone-label-demo {
+  position: absolute;
+  top: 2px; left: 2px; right: 2px;
+  text-align: center;
+  font-size: 8px;
+  color: rgba(255,255,0,0.9);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.sz-info { flex: 1; min-width: 220px; }
+.sz-points { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+.sz-point { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; }
+.sz-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.safe-btn-demo {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1.5px solid var(--gray-200);
+  background: white;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 14px;
+}
+.safe-btn-demo:hover, .safe-btn-demo.active { border-color: var(--red); color: var(--red); }
+
+/* ── DEMO: LOGO UPLOAD ── */
+.logo-demo { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+.upload-zone {
+  flex: 0 0 200px;
+  border: 2px dashed var(--gray-200);
+  border-radius: 12px;
+  padding: 32px 20px;
+  text-align: center;
+  transition: all 0.3s;
+  background: var(--gray-50);
+  cursor: pointer;
+}
+.upload-zone.drag { border-color: var(--red); background: rgba(196,30,58,0.04); }
+.upload-icon { font-size: 28px; margin-bottom: 8px; }
+.upload-text { font-size: 13px; color: var(--gray-600); line-height: 1.5; }
+.upload-hint { font-size: 11px; color: var(--gray-400); margin-top: 6px; }
+.logo-result { flex: 1; min-width: 200px; }
+.logo-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  margin-bottom: 12px;
+}
+.logo-chip.show { opacity: 1; }
+.logo-chip-icon { font-size: 16px; }
+.banner-with-logo {
+  border-radius: 8px;
+  overflow: hidden;
+  height: 120px;
+  position: relative;
+  background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+.banner-logo-overlay {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: white;
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--red);
+  opacity: 0;
+  transition: opacity 0.6s ease 0.4s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.banner-logo-overlay.show { opacity: 1; }
+.banner-content-demo {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: white; text-align: center;
+}
+.banner-content-demo .big { font-size: 18px; font-weight: 800; }
+.banner-content-demo .small { font-size: 10px; opacity: 0.7; }
+
+/* ── DEMO: APPROVE + PDF ── */
+.approve-demo { display: flex; flex-direction: column; gap: 20px; }
+.approve-flow {
+  display: flex; gap: 0; align-items: stretch;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.flow-step {
+  flex: 1; padding: 16px;
+  text-align: center;
+  position: relative;
+  transition: background 0.4s;
+}
+.flow-step.done { background: rgba(22,163,74,0.06); }
+.flow-step.active-step { background: rgba(196,30,58,0.05); }
+.flow-sep {
+  display: flex; align-items: center; padding: 0 4px;
+  color: var(--gray-400); font-size: 18px;
+  flex-shrink: 0;
+}
+.flow-icon { font-size: 24px; margin-bottom: 6px; }
+.flow-label { font-size: 12px; font-weight: 600; color: var(--black); }
+.flow-sub { font-size: 11px; color: var(--gray-600); margin-top: 2px; }
+.flow-check {
+  position: absolute; top: 8px; right: 8px;
+  width: 18px; height: 18px;
+  background: var(--green);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 10px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.flow-step.done .flow-check { opacity: 1; }
+
+.output-files { display: flex; gap: 12px; flex-wrap: wrap; }
+.output-file {
+  flex: 1; min-width: 160px;
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  padding: 14px;
+  background: white;
+  transition: all 0.3s;
+  opacity: 0;
+  transform: translateY(8px);
+}
+.output-file.show { opacity: 1; transform: translateY(0); }
+.output-file:hover { border-color: var(--red); box-shadow: var(--shadow); }
+.output-type { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gray-400); margin-bottom: 6px; }
+.output-name { font-size: 14px; font-weight: 600; color: var(--black); margin-bottom: 10px; }
+.output-actions { display: flex; gap: 6px; }
+.btn-copy-mock {
+  flex: 1; padding: 7px 10px;
+  background: var(--red); color: white;
+  border: none; border-radius: 6px;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-copy-mock:hover { background: var(--red-light); }
+.btn-dl-mock {
+  flex: 1; padding: 7px 10px;
+  background: white; color: var(--black);
+  border: 1.5px solid var(--gray-200);
+  border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;
+  transition: border-color 0.2s;
+}
+.btn-dl-mock:hover { border-color: var(--black); }
+
+/* ── DEMO: EMBED ── */
+.embed-demo { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+.embed-code-block {
+  flex: 1; min-width: 260px;
+  background: #1e1e2e;
+  border-radius: 10px;
+  padding: 16px;
+  font-family: 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #cdd6f4;
+  overflow-x: auto;
+}
+.code-tag { color: #89dceb; }
+.code-attr { color: #a6e3a1; }
+.code-val { color: #f9e2af; }
+.embed-preview {
+  flex: 0 0 200px;
+  border: 2px solid var(--gray-200);
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 8px;
+  background: #f5f5f5;
+}
+.embed-label { font-size: 10px; color: var(--gray-400); text-align: center; margin-bottom: 6px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.embed-iframe-mock {
+  background: white;
+  border-radius: 6px;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+}
+.embed-header-mock {
+  background: var(--red);
+  height: 28px;
+  display: flex; align-items: center;
+  padding: 0 10px;
+  gap: 6px;
+}
+.embed-header-logo { width: 16px; height: 16px; background: white; border-radius: 3px; opacity: 0.9; }
+.embed-header-text { font-size: 9px; font-weight: 700; color: white; }
+.embed-body-mock { padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+.embed-row { display: flex; gap: 4px; }
+.embed-block { background: var(--gray-100); border-radius: 4px; height: 8px; }
+
+/* ── DEMO: RATE LIMIT ── */
+.ratelimit-demo { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+.rl-meter { flex: 0 0 220px; }
+.rl-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+.rl-bar-wrap { background: var(--gray-100); border-radius: 99px; height: 12px; overflow: hidden; margin-bottom: 8px; }
+.rl-bar { height: 100%; background: var(--green); border-radius: 99px; transition: width 1s ease, background 0.5s; }
+.rl-count { font-size: 12px; color: var(--gray-600); }
+.rl-info { flex: 1; min-width: 200px; font-size: 13px; color: var(--gray-600); line-height: 1.6; }
+
+/* ── DEMO: FLOW OVERVIEW ── */
+.flow-overview { display: flex; flex-direction: column; gap: 0; }
+.flow-item {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--gray-100);
+  position: relative;
+}
+.flow-item:last-child { border-bottom: none; }
+.flow-circle {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--red);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(196,30,58,0.3);
+}
+.flow-item-text h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.flow-item-text p { font-size: 13px; color: var(--gray-600); line-height: 1.5; }
+.flow-connector {
+  position: absolute; left: 19px; top: 56px;
+  width: 2px; height: calc(100% - 40px);
+  background: linear-gradient(to bottom, var(--red), transparent);
+  opacity: 0.2;
+}
+
+/* ── BUTTONS ── */
+.demo-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--red); color: white;
+  border: none; border-radius: 8px;
+  padding: 10px 18px; font-family: inherit;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(196,30,58,0.25);
+}
+.demo-btn:hover { background: var(--red-light); transform: translateY(-1px); }
+.demo-btn-secondary {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: white; color: var(--black);
+  border: 1.5px solid var(--gray-200);
+  border-radius: 8px; padding: 10px 18px;
+  font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s;
+}
+.demo-btn-secondary:hover { border-color: var(--red); color: var(--red); }
+
+/* ── FOOTER ── */
+.footer {
+  background: var(--black);
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  padding: 24px;
+  font-size: 13px;
+  margin-top: 48px;
+}
+.footer strong { color: rgba(255,255,255,0.8); }
+
+/* ── ANIMATIONS ── */
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+.pulse { animation: pulse 2s infinite; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin 1s linear infinite; display: inline-block; }
+
+.tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(196,30,58,0.08);
+  color: var(--red);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid rgba(196,30,58,0.15);
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Factoryshop.cz · Funkční přehled</div>
+  <h1>AI Konfigurátor <span>bannerů</span></h1>
+  <p>Interaktivní vizualizace všech funkcí aplikace pro generování tiskových dat bannerů pomocí umělé inteligence.</p>
+  <div class="hero-chips">
+    <div class="chip">🤖 OpenAI DALL-E 3</div>
+    <div class="chip">📄 PDF 300 DPI</div>
+    <div class="chip">🖼️ SVG vektorizace</div>
+    <div class="chip">🔗 Iframe embed</div>
+    <div class="chip">🗃️ PostgreSQL</div>
+  </div>
+</section>
+
+<!-- NAV -->
+<nav class="nav-bar" id="navBar">
+  <button class="nav-btn active" onclick="scrollTo('sec1')">1. Chat s AI</button>
+  <button class="nav-btn" onclick="scrollTo('sec2')">2. Rozměry</button>
+  <button class="nav-btn" onclick="scrollTo('sec3')">3. Generování</button>
+  <button class="nav-btn" onclick="scrollTo('sec4')">4. Logo upload</button>
+  <button class="nav-btn" onclick="scrollTo('sec5')">5. Bezpečná zóna</button>
+  <button class="nav-btn" onclick="scrollTo('sec6')">6. Schválení & PDF</button>
+  <button class="nav-btn" onclick="scrollTo('sec7')">7. Embed</button>
+  <button class="nav-btn" onclick="scrollTo('sec8')">8. Rate limiting</button>
+  <button class="nav-btn" onclick="scrollTo('sec9')">9. Celý průchod</button>
+</nav>
+
+<div class="sections">
+
+  <!-- 1. CHAT -->
+  <section class="feature-section" id="sec1">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(196,30,58,0.08)">💬</div>
+      <div class="section-meta">
+        <div class="section-num">Funkce 1</div>
+        <div class="section-title">Chat rozhraní s AI</div>
+        <div class="section-desc">Uživatel popíše banner v přirozeném jazyce. AI asistent reaguje v reálném čase a klade doplňující otázky. Podporovány jsou i iterativní úpravy – stačí napsat „posuň logo doleva".</div>
+      </div>
+    </div>
+    <div class="demo-area">
+      <div class="chat-demo" id="chatDemo">
+        <div class="chat-bubble" id="b1">
+          <div class="avatar avatar-ai">AI</div>
+          <div class="bubble-text">Ahoj! Jsem tu, abych ti pomohl navrhnout banner pro velkoplošný tisk. Popiš mi, jak má banner vypadat – barvy, text, obrázky.</div>
+        </div>
+        <div class="chat-bubble user" id="b2">
+          <div class="avatar avatar-user">JW</div>
+          <div class="bubble-text">Chci tmavě modrý banner s nápisem LETNÍ VÝPRODEJ 2025, červenou proužek a logem naší firmy v rohu.</div>
+        </div>
+        <div class="chat-bubble" id="b3">
+          <div class="avatar avatar-ai">AI</div>
+          <div class="bubble-text"><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+        </div>
+        <div class="chat-bubble" id="b4" style="display:none">
+          <div class="avatar avatar-ai">AI</div>
+          <div class="bubble-text">Rozumím! Tmavě modrý banner se zlatým nebo bílým textem by vypadal skvěle. Jaký font a velikost banneru preferujete? Mám připravit náhled ve formátu na výšku nebo na šířku?</div>
+        </div>
+        <div class="chat-bubble user" id="b5" style="display:none">
+          <div class="avatar avatar-user">JW</div>
+          <div class="bubble-text">Na výšku, 100×150 cm. Bílý text, střed. A přidej CTA tlačítko „Nakupte nyní".</div>
+        </div>
+      </div>
+      <div class="chat-input-mock" style="margin-top:16px">
+        <span>📎</span>
+        <span style="flex:1">Popiš svůj návrh banneru… Můžete připojit logo nebo obrázek.</span>
+        <div class="send-btn-mock">Odeslat</div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="demo-btn" onclick="startChat()">▶ Přehrát dialog</button>
+        <button class="demo-btn-secondary" onclick="resetChat()">↺ Reset</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. DIMENSIONS -->
+  <section class="feature-section" id="sec2">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(37,99,235,0.08)">📐</div>
+      <div class="section-meta">
+        <div class="section-num">Funkce 2</div>
+        <div class="section-title">Výběr rozměrů banneru</div>
+        <div class="section-desc">Uživatel zadá šířku a výšku v centimetrech. Náhled se adaptivně přizpůsobí zvolenému poměru stran. Systém ověřuje validitu hodnot.</div>
+      </div>
+    </div>
+    <div class="demo-area">
+      <div class="dim-demo">
+        <div class="dim-inputs">
+          <div class="dim-field">
+            <div class="dim-label">Šířka (cm)</div>
+            <div class="dim-input-mock" id="widthVal">100</div>
+          </div>
+          <div style="display:flex;align-items:flex-end;padding-bottom:10px;font-size:24px;color:var(--gray-400)">×</div>
+          <div class="dim-field">
+            <div class="dim-label">Výška (cm)</div>
+            <div class="dim-input-mock" id="heightVal">150</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+          <div class="banner-preview-shape" id="bannerShape" style="width:80px;height:120px">
+            <span id="ratioText" style="position:relative;z-index:1;font-size:11px">2:3</span>
+          </div>
+          <div>
+            <div class="ratio-label" id="ratioLabel">Poměr stran: 2 : 3</div>
+            <div style="font-size:12px;color:var(--gray-600);margin-top:6px">Výstup: PDF 300 DPI = <span id="pxCalc" style="font-weight:600">11811 × 17717 px</span></div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="demo-btn" onclick="setDim(100,150)">100 × 150 cm</button>
+          <button class="demo-btn-secondary" onclick="setDim(200,100)">200 × 100 cm</button>
+          <button class="demo-btn-secondary" onclick="setDim(50,200)">50 × 200 cm</button>
+          <button class="demo-btn-secondary" onclick="setDim(150,150)">150 × 150 cm</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. GENERATION -->
+  <section class="feature-section" id="sec3">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(147,51,234,0.08)">🎨</div>
+      <div class="section-meta">
+        <div class="section-num">Funkce 3</div>
+        <div class="section-title">AI generování návrhu</div>
+        <div class="section-desc">Backend zavolá OpenAI DALL-E 3, vygeneruje obrázek v optimálním poměru stran a vrátí náhled. Zobrazí se modální dialog s progressem. Podporováno i demo režim bez API klíče.</div>
+      </div>
+    </div>
+    <div class="demo-area">
+      <div class="generation-demo">
+        <div class="gen-steps" id="genSteps">
+          <div class="gen-step" id="gs1">
+            <div class="step-icon">📝</div>
+            <div><div class="step-text">Zpracování promptu</div><div class="step-sub">Optimalizace pro tisk</div></div>
+          </div>
+          <div class="gen-step" id="gs2">
+            <div class="step-icon">🤖</div>
+            <div><div class="step-text">Volání DALL-E 3 API</div><div class="step-sub">OpenAI generování</div></div>
+          </div>
+          <div class="gen-step" id="gs3">
+            <div class="step-icon">🖼️</div>
+            <div><div class="step-text">Zpracování obrázku</div><div class="step-sub">Sharp, správný poměr</div></div>
+          </div>
+          <div class="gen-step" id="gs4">
+            <div class="step-icon">✅</div>
+            <div><div class="step-text">Náhled připraven</div><div class="step-sub">Base64 → prohlížeč</div></div>
+          </div>
+        </div>
+        <div class="gen-preview-wrap">
+          <div class="gen-preview-inner" id="genPreviewInner">
+            <div id="genPlaceholder" style="text-align:center;color:var(--gray-400)">
+              <div style="font-size:32px;margin-bottom:8px">🎨</div>
+              <div style="font-size:13px">Klikněte „Generovat"</div>
+            </div>
+            <div class="mock-banner-canvas" id="genResult">
+              <div class="mock-banner-text-sub">Factoryshop.cz</div>
+              <div class="mock-banner-red-stripe"></div>
+              <div class="mock-banner-text-big">LETNÍ<br>VÝPRODEJ</div>
+              <div class="mock-banner-text-sub">2025</div>
+              <div style="height:8px"></div>
+              <div class="mock-banner-cta">Nakupte nyní →</div>
+            </div>
+            <div class="gen-progress-bar" id="genProgressBar" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:8px">
+        <button class="demo-btn" onclick="startGeneration()">🎨 Simulovat generování</button>
+        <button class="demo-btn-secondary" onclick="resetGeneration()">↺ Reset</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. LOGO UPLOAD -->
+  <section class="feature-section" id="sec4">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(234,179,8,0.1)">📎</div>
+      <div class="section-meta">
+        <div class="section-num">Funkce 4</div>
+        <div class="section-title">Upload loga a referenčního obrázku</div>
+        <div class="section-desc">Uživatel může přiložit logo (PNG, JPG, WebP, max 20 MB). Systém ho automaticky zkomposituje na vygenerovaný banner pomocí knihovny Sharp.</div>
+      </div>
+    </div>
+    <div class="demo-area">
+      <div class="logo-demo">
+        <div class="upload-zone" id="uploadZone" onclick="simulateUpload()">
+          <div class="upload-icon" id="uploadIcon">📎</div>
+          <div class="upload-text" id="uploadText">Klikněte nebo přetáhněte logo sem</div>
+          <div class="upload-hint">PNG, JPG, WebP · max 20 MB</div>
+        </div>
+        <div class="logo-result">
+          <div class="logo-chip" id="logoChip">
+            <div class="logo-chip-icon">🖼️</div>
+            <span>logo-firma.png <span style="color:var(--gray-400)">(84 kB)</span></span>
+            <span style="color:var(--green);font-size:11px;margin-left:auto">✓</span>
+          </div>
+          <div class="banner-with-logo">
+            <div class="banner-content-demo">
+              <div>
+                <div class="big">LETNÍ VÝPRODEJ</div>
+                <div class="small">2025</div>
+              </div>
+            </div>
+            <div class="banner-logo-overlay" id="logoOverlay">FactoryShop</div>
+          </div>
+          <div style="font-size:12px;color:var(--gray-600);margin-top:8px">Logo je zkompositováno přes vygenerovaný banner pomocí <strong>Sharp</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. SAFE ZONE -->
+  <section class="feature-section" id="sec5">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(234,179,8,0.1)">⚠️</div>
+      <div class="section-meta">
+        <div class="section-num">Funkce 5</div>
+        <div class="section-title">Bezpečná zóna a spadávka</div>
+        <div class="section-desc">Přepínatelný overlay zobrazuje bezpečnou zónu 5 cm od okraje, kam nesmí zasahovat důležitý obsah. Finální PDF obsahuje bezpečnou zónu a 3mm spadávku.</div>
+      </div>
+    </div>
+    <div class="demo-area">
+      <div class="safe-zone-demo">
+        <div class="safe-zone-visual" id="szVisual">
+          <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);flex-direction:column;gap:4px">
+            <div style="font-size:18px;font-weight:800;color:rgba(255,255,255,0.8)">LETNÍ<br>VÝPRODEJ</div>
+          </div>
+          <div class="safe-zone-overlay-demo" id="szOverlay">
+            <div class="safe-zone-frame-demo"></div>
+            <div class="safe-zone-label-demo">← Bezpečná zóna 5 cm →</div>
+          </div>
+        </div>
+        <div class="sz-info">
+          <div style="font-size:14px;font-weight:600;margin-bottom:8px">Parametry tisku</div>
+          <div class="sz-points">
+            <div class="sz-point">
+              <div class="sz-dot" style="background:rgba(255,204,0,0.7)"></div>
+              <div><strong>Bezpečná zóna:</strong> 5 cm od okraje – sem nesmí zasahovat text ani logo</div>
+            </div>
+            <div class="sz-point">
+              <div class="sz-dot" style="background:var(--red)"></div>
+              <div><strong>Spadávka:</strong> 3 mm při tisku do okraje – přídavek pro řez</div>
+            </div>
+            <div class="sz-point">
+              <div class="sz-dot" style="background:var(--green)"></div>
+              <div><strong>PDF výstup:</strong> 300 DPI, rozměry 1:1, barevně RGB (CMYK při tisku)</div>
+            </div>
+          </div>
+          <button class="safe-btn-demo" id="szBtn" onclick="toggleSafeZone()">
+            <span id="szBtnIcon">👁️</span> Zobrazit bezpečnou zónu
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. APPROVE + PDF -->
+  <section class="feature-section" id="sec6">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(22,163,74,0.08)">✅</div>
+      <div class="section-meta">
+        <div class="section-num">Funkce 6</div>
+        <div class="section-title">Schválení a generování tiskových dat</div>
+        <div class="section-desc">Po schválení náhledu server vygeneruje PDF v tiskové kvalitě (300 DPI, 1:1 v cm). Volitelně i SVG varianta pro ostřejší text. Výstupy jsou dostupné ke stažení nebo přes zkopírovaný odkaz.</div>
+      </div>
+    </div>
+    <div class="demo-area">
+      <div class="approve-demo">
+        <div class="approve-flow">
+          <div class="flow-step" id="fs1">
+            <div class="flow-icon">🖼️</div>
+            <div class="flow-label">Náhled schválen</div>
+            <div class="flow-sub">Uživatel klikne „Schválit"</div>
+            <div class="flow-check">✓</div>
+          </div>
+          <div class="flow-sep">→</div>
+          <div class="flow-step" id="fs2">
+            <div class="flow-icon">⚙️</div>
+            <div class="flow-label">Zpracování</div>
+            <div class="flow-sub">Sharp, PDF generování</div>
+            <div class="flow-check">✓</div>
+          </div>
+          <div class="flow-sep">→</div>
+          <div class="flow-step" id="fs3">
+            <div class="flow-icon">☁️</div>
+            <div class="flow-label">FTP upload</div>
+            <div class="flow-sub">Volitelné, nebo lokální</div>
+            <div class="flow-check">✓</div>
+          </div>
+          <div class="flow-sep">→</div>
+          <div class="flow-step" id="fs4">
+            <div class="flow-icon">🔗</div>
+            <div class="flow-label">Odkaz hotov</div>
+            <div class="flow-sub">PDF + SVG ke stažení</div>
+            <div class="flow-check">✓</div>
+          </div>
+        </div>
+        <div class="output-files">
+          <div class="output-file" id="of1">
+            <div class="output-type">📄 PDF · Rastr</div>
+            <div class="output-name">banner_100x150cm_300dpi.pdf</div>
+            <div style="font-size:11px;color:var(--gray-400);margin-bottom:10px">11 811 × 17 717 px · ~45 MB</div>
+            <div class="output-actions">
+              <button class="btn-copy-mock" onclick="copyFeedback(this)">📋 Kopírovat odkaz</button>
+              <button class="btn-dl-mock">⬇ Stáhnout</button>
+            </div>
+          </div>
+          <div class="output-file" id="of2">
+            <div class="output-type">🖊 SVG · Vektory</div>
+            <div class="output-name">banner_100x150cm.svg</div>
+            <div style="font-size:11px;color:var(--gray-400);margin-bottom:10px">Nekonečné rozlišení · ~180 kB</div>
+            <div class="output-actions">
+              <button class="btn-copy-mock" onclick="copyFeedback(this)">📋 Kopírovat odkaz</button>
+              <button class="btn-dl-mock">⬇ Stáhnout</button>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--gray-600);background:var(--gray-50);border-radius:8px;padding:10px 14px;border:1px solid var(--gray-200)">
+          💡 <strong>Tip:</strong> Odkaz vložte do poznámky objednávky – data si stáhneme sami do výroby. SVG je doporučeno pro velké formáty (ostřejší text a logo).
+        </div>
+        <button class="demo-btn" onclick="runApproveFlow()" style="align-self:flex-start">▶ Simulovat schválení</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. EMBED -->
+  <section class="feature-section" id="sec7">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(99,102,241,0.08)">🔗</div>
+      <div class="section-meta">
+        <div class="section-num">Funkce 7</div>
+        <div class="section-title">Embed režim pro e-shop</div>
+        <div class="section-desc">Konfigurátor lze vložit jako iframe přímo na detail produktu v Upgates. Parametry <code>product</code>, <code>maxWidth</code> a <code>returnTo</code> přizpůsobí chování konkrétnímu produktu.</div>
+      </div>
+    </div>
+    <div class="demo-area">
+      <div class="embed-demo">
+        <div class="embed-code-block">
+          <span class="code-tag">&lt;iframe</span><br>
+          &nbsp;&nbsp;<span class="code-attr">src</span>=<span class="code-val">"https://vaše-doména.cz/embed.html</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-val">?product=<span style="color:#89dceb">123</span></span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-val">&amp;maxWidth=<span style="color:#89dceb">150</span></span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-val">&amp;returnTo=https://factoryshop.cz/..."</span><br>
+          &nbsp;&nbsp;<span class="code-attr">width</span>=<span class="code-val">"100%"</span><br>
+          &nbsp;&nbsp;<span class="code-attr">height</span>=<span class="code-val">"700"</span><br>
+          &nbsp;&nbsp;<span class="code-attr">frameborder</span>=<span class="code-val">"0"</span><br>
+          <span class="code-tag">&gt;&lt;/iframe&gt;</span>
+        </div>
+        <div class="embed-preview">
+          <div class="embed-label">Náhled v e-shopu</div>
+          <div class="embed-iframe-mock">
+            <div class="embed-header-mock">
+              <div class="embed-header-logo"></div>
+              <div class="embed-header-text">Factoryshop.cz · AI Konfigurátor</div>
+            </div>
+            <div class="embed-body-mock">
+              <div class="embed-row">
+                <div class="embed-block" style="width:35%;background:#e5e5e5"></div>
+                <div class="embed-block" style="width:15%;background:#e5e5e5;margin-left:auto"></div>
+                <div class="embed-block" style="width:15%;background:#e5e5e5;margin-left:4px"></div>
+              </div>
+              <div style="background:var(--gray-100);border-radius:4px;height:80px;margin:4px 0;display:flex;align-items:center;justify-content:center">
+                <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);width:40px;height:60px;border-radius:3px;display:flex;align-items:center;justify-content:center;color:white;font-size:5px;font-weight:700;text-align:center">LETNÍ VÝPRODEJ</div>
+              </div>
+              <div class="embed-block" style="width:90%;height:6px"></div>
+              <div class="embed-block" style="width:70%;height:6px;margin-top:4px"></div>
+              <div style="margin-top:8px;display:flex;gap:4px">
+                <div style="flex:1;height:20px;background:var(--red);border-radius:4px"></div>
+                <div style="width:60px;height:20px;background:var(--gray-200);border-radius:4px"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="flex:1;min-width:200px">
+          <div style="font-size:14px;font-weight:600;margin-bottom:12px">Parametry embed URL</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:13px">
+            <div style="display:flex;gap:8px;align-items:flex-start">
+              <span class="tag">product</span>
+              <span style="color:var(--gray-600)">ID produktu pro integraci s Upgates API</span>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start">
+              <span class="tag">maxWidth</span>
+              <span style="color:var(--gray-600)">Maximální šířka banneru v cm (omezení dle produktu)</span>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-start">
+              <span class="tag">returnTo</span>
+              <span style="color:var(--gray-600)">URL pro návrat do obchodu po dokončení</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. RATE LIMITING -->
+  <section class="feature-section" id="sec8">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(239,68,68,0.08)">🛡️</div>
+      <div class="section-meta">
+        <div class="section-num">Funkce 8</div>
+        <div class="section-title">Rate limiting & databáze</div>
+        <div class="section-desc">Každá session má denní limit generování (výchozí: 10×). Logy se ukládají do PostgreSQL tabulky <code>generation_log</code>. Bez DB funguje, ale bez limitování a historie.</div>
+      </div>
+    </div>
+    <div class="demo-area">
+      <div class="ratelimit-demo">
+        <div class="rl-meter">
+          <div class="rl-title">Denní generování</div>
+          <div class="rl-bar-wrap">
+            <div class="rl-bar" id="rlBar" style="width:70%"></div>
+          </div>
+          <div class="rl-count" id="rlCount">7 / 10 generací použito</div>
+          <div style="margin-top:14px;display:flex;flex-direction:column;gap:6px">
+            <button class="demo-btn" onclick="useGeneration()" style="font-size:12px;padding:8px 14px">+ Simulovat generaci</button>
+            <button class="demo-btn-secondary" onclick="resetLimit()" style="font-size:12px;padding:8px 14px">↺ Reset na 0</button>
+          </div>
+        </div>
+        <div class="rl-info">
+          <div style="font-size:14px;font-weight:600;margin-bottom:10px">Databázová architektura</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;padding:10px 14px;font-size:13px">
+              <div style="font-weight:600;margin-bottom:4px;color:var(--blue)">🗄️ designs</div>
+              Ukládá vygenerované návrhy, stav schválení, rozměry a session ID.
+            </div>
+            <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;padding:10px 14px;font-size:13px">
+              <div style="font-weight:600;margin-bottom:4px;color:var(--blue)">📊 generation_log</div>
+              Záznamy o každé generaci – datum, session, IP. Základ pro rate limiting.
+            </div>
+            <div style="font-size:12px;color:var(--gray-600);padding:8px 0">
+              ⚠️ Bez <code>DATABASE_URL</code> v .env aplikace funguje, ale neukládá historii a neaplikuje denní limit.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. FULL FLOW -->
+  <section class="feature-section" id="sec9">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(196,30,58,0.08)">🗺️</div>
+      <div class="section-meta">
+        <div class="section-num">Přehled</div>
+        <div class="section-title">Celý průchod uživatele</div>
+        <div class="section-desc">Kompletní tok od otevření konfigurátoru až po předání tiskových dat do výroby.</div>
+      </div>
+    </div>
+    <div class="demo-area">
+      <div class="flow-overview">
+        <div class="flow-item">
+          <div class="flow-connector"></div>
+          <div class="flow-circle">💬</div>
+          <div class="flow-item-text">
+            <h4>1. Uživatel popíše banner</h4>
+            <p>Chat rozhraní podobné ChatGPT. Popis v přirozeném jazyce – barvy, text, motiv, styl.</p>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-connector"></div>
+          <div class="flow-circle">📐</div>
+          <div class="flow-item-text">
+            <h4>2. Zadá rozměry</h4>
+            <p>Šířka × výška v centimetrech. Náhled se adaptuje. Systém vypočítá potřebné rozlišení (300 DPI).</p>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-connector"></div>
+          <div class="flow-circle">📎</div>
+          <div class="flow-item-text">
+            <h4>3. Volitelně přiloží logo</h4>
+            <p>PNG/JPG/WebP logo se automaticky zkomposituje přes vygenerovaný banner (knihovna Sharp).</p>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-connector"></div>
+          <div class="flow-circle">🎨</div>
+          <div class="flow-item-text">
+            <h4>4. AI vygeneruje návrh</h4>
+            <p>Backend zavolá DALL-E 3 API, vrátí náhled. Uživatel může iterovat – „posuň logo", „jiná barva".</p>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-connector"></div>
+          <div class="flow-circle">👁️</div>
+          <div class="flow-item-text">
+            <h4>5. Zkontroluje s bezpečnou zónou</h4>
+            <p>Overlay zobrazí 5cm bezpečnou zónu. Uživatel ověří, že text a logo jsou uvnitř.</p>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-connector"></div>
+          <div class="flow-circle">✅</div>
+          <div class="flow-item-text">
+            <h4>6. Schválí návrh</h4>
+            <p>Klikne „Schválit a získat tisková data". Server vygeneruje PDF (a volitelně SVG).</p>
+          </div>
+        </div>
+        <div class="flow-item">
+          <div class="flow-circle">🔗</div>
+          <div class="flow-item-text">
+            <h4>7. Předá odkaz do výroby</h4>
+            <p>Zkopíruje URL na PDF/SVG a vloží ji do poznámky objednávky. Výroba si data stáhne sama.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <strong>AI Konfigurátor bannerů – Factoryshop.cz</strong><br>
+  Node.js · Express · OpenAI DALL-E 3 · Sharp · PostgreSQL · PDF · SVG
+</footer>
+
+<script>
+// ── Intersection Observer for animations ──
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add('visible');
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.feature-section').forEach(s => observer.observe(s));
+
+// ── Nav active state ──
+function scrollTo(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+window.addEventListener('scroll', () => {
+  const sections = ['sec1','sec2','sec3','sec4','sec5','sec6','sec7','sec8','sec9'];
+  const navBtns = document.querySelectorAll('.nav-btn');
+  let active = 0;
+  sections.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top < window.innerHeight * 0.5) active = i;
+  });
+  navBtns.forEach((b, i) => b.classList.toggle('active', i === active));
+});
+
+// ── 1. CHAT ──
+let chatRunning = false;
+function startChat() {
+  if (chatRunning) return;
+  chatRunning = true;
+  resetChat();
+  const show = (id, delay) => setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) { el.style.display = 'flex'; requestAnimationFrame(() => el.classList.add('show')); }
+  }, delay);
+  show('b1', 100);
+  show('b2', 900);
+  show('b3', 1600);
+  setTimeout(() => {
+    const b3 = document.getElementById('b3');
+    if (b3) b3.style.display = 'none';
+    show('b4', 0);
+  }, 3200);
+  show('b5', 4200);
+}
+function resetChat() {
+  chatRunning = false;
+  ['b1','b2','b3','b4','b5'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.classList.remove('show'); el.style.display = (id==='b1'||id==='b2'||id==='b3') ? 'flex' : 'none'; }
+    if (id==='b1'||id==='b2'||id==='b3') el && el.classList.remove('show');
+  });
+}
+// auto-start after page loads
+setTimeout(startChat, 800);
+
+// ── 2. DIMENSIONS ──
+function setDim(w, h) {
+  document.getElementById('widthVal').textContent = w;
+  document.getElementById('heightVal').textContent = h;
+  const gcd = (a, b) => b ? gcd(b, a%b) : a;
+  const g = gcd(w, h);
+  const rx = w/g, ry = h/g;
+  document.getElementById('ratioLabel').textContent = `Poměr stran: ${rx} : ${ry}`;
+  document.getElementById('ratioText').textContent = `${rx}:${ry}`;
+  const pxW = Math.round(w / 2.54 * 300);
+  const pxH = Math.round(h / 2.54 * 300);
+  document.getElementById('pxCalc').textContent = `${pxW.toLocaleString()} × ${pxH.toLocaleString()} px`;
+  const shape = document.getElementById('bannerShape');
+  const maxS = 140;
+  if (w >= h) { shape.style.width = maxS+'px'; shape.style.height = Math.round(maxS*h/w)+'px'; }
+  else { shape.style.height = maxS+'px'; shape.style.width = Math.round(maxS*w/h)+'px'; }
+  ['widthVal','heightVal'].forEach(id => {
+    const el = document.getElementById(id);
+    el.classList.add('focus');
+    setTimeout(() => el.classList.remove('focus'), 600);
+  });
+}
+
+// ── 3. GENERATION ──
+let genRunning = false;
+function startGeneration() {
+  if (genRunning) return;
+  genRunning = true;
+  resetGeneration();
+  const steps = ['gs1','gs2','gs3','gs4'];
+  document.getElementById('genPlaceholder').style.display = 'none';
+  const bar = document.getElementById('genProgressBar');
+  steps.forEach((id, i) => {
+    setTimeout(() => {
+      if (i > 0) document.getElementById(steps[i-1]).classList.remove('active');
+      if (i > 0) document.getElementById(steps[i-1]).classList.add('done');
+      document.getElementById(id).classList.add('active');
+      bar.style.width = (i+1)*25 + '%';
+    }, i * 800);
+  });
+  setTimeout(() => {
+    document.getElementById('gs4').classList.remove('active');
+    document.getElementById('gs4').classList.add('done');
+    document.getElementById('genResult').classList.add('show');
+    bar.style.width = '100%';
+    setTimeout(() => { bar.style.opacity='0'; }, 500);
+    genRunning = false;
+  }, 3500);
+}
+function resetGeneration() {
+  genRunning = false;
+  ['gs1','gs2','gs3','gs4'].forEach(id => {
+    document.getElementById(id).classList.remove('active','done');
+  });
+  document.getElementById('genResult').classList.remove('show');
+  document.getElementById('genPlaceholder').style.display = 'block';
+  const bar = document.getElementById('genProgressBar');
+  bar.style.transition = 'none'; bar.style.width = '0%'; bar.style.opacity = '1';
+  setTimeout(() => bar.style.transition = 'width 3s ease', 50);
+}
+
+// ── 4. LOGO UPLOAD ──
+let uploadDone = false;
+function simulateUpload() {
+  if (uploadDone) return;
+  uploadDone = true;
+  const zone = document.getElementById('uploadZone');
+  zone.classList.add('drag');
+  document.getElementById('uploadIcon').textContent = '⏳';
+  document.getElementById('uploadText').textContent = 'Nahrávání…';
+  setTimeout(() => {
+    zone.classList.remove('drag');
+    document.getElementById('uploadIcon').textContent = '✅';
+    document.getElementById('uploadText').textContent = 'logo-firma.png nahráno';
+    document.getElementById('logoChip').classList.add('show');
+    document.getElementById('logoOverlay').classList.add('show');
+  }, 1000);
+}
+
+// ── 5. SAFE ZONE ──
+let szOn = false;
+function toggleSafeZone() {
+  szOn = !szOn;
+  document.getElementById('szOverlay').classList.toggle('show', szOn);
+  const btn = document.getElementById('szBtn');
+  btn.classList.toggle('active', szOn);
+  btn.innerHTML = szOn
+    ? '<span>🙈</span> Skrýt bezpečnou zónu'
+    : '<span>👁️</span> Zobrazit bezpečnou zónu';
+}
+
+// ── 6. APPROVE FLOW ──
+function runApproveFlow() {
+  ['fs1','fs2','fs3','fs4'].forEach(id => document.getElementById(id).classList.remove('done','active-step'));
+  ['of1','of2'].forEach(id => document.getElementById(id).classList.remove('show'));
+  const steps = ['fs1','fs2','fs3','fs4'];
+  steps.forEach((id, i) => {
+    setTimeout(() => {
+      if (i > 0) document.getElementById(steps[i-1]).classList.remove('active-step');
+      document.getElementById(id).classList.add('active-step');
+      setTimeout(() => {
+        document.getElementById(id).classList.remove('active-step');
+        document.getElementById(id).classList.add('done');
+      }, 500);
+    }, i * 700);
+  });
+  setTimeout(() => {
+    document.getElementById('of1').classList.add('show');
+    setTimeout(() => document.getElementById('of2').classList.add('show'), 200);
+  }, 3200);
+}
+function copyFeedback(btn) {
+  const orig = btn.textContent;
+  btn.textContent = '✓ Zkopírováno!';
+  btn.style.background = 'var(--green)';
+  setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1500);
+}
+
+// ── 8. RATE LIMIT ──
+let rlUsed = 7;
+const RL_MAX = 10;
+function updateRlBar() {
+  const pct = (rlUsed / RL_MAX) * 100;
+  const bar = document.getElementById('rlBar');
+  bar.style.width = pct + '%';
+  bar.style.background = rlUsed >= RL_MAX ? 'var(--red)' : rlUsed >= 8 ? '#f59e0b' : 'var(--green)';
+  document.getElementById('rlCount').textContent =
+    rlUsed >= RL_MAX
+      ? `❌ Denní limit vyčerpán (${RL_MAX} / ${RL_MAX})`
+      : `${rlUsed} / ${RL_MAX} generací použito`;
+}
+function useGeneration() {
+  if (rlUsed < RL_MAX) { rlUsed++; updateRlBar(); }
+}
+function resetLimit() { rlUsed = 0; updateRlBar(); }
+updateRlBar();
+</script>
+</body>
+</html>

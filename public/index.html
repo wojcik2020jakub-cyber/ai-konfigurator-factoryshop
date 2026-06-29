@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>AI Konfigurátor bannerů | Factoryshop.cz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <img src="images/logo.png" alt="" class="header-logo-img">
+    <span class="header-logo">Factoryshop.cz</span>
+    <span class="header-badge">AI Konfigurátor</span>
+  </header>
+  <main class="container">
+    <div class="layout layout-stacked">
+      <section class="preview-section box">
+        <h3 class="preview-title">Rozměry a náhled</h3>
+        <div class="dimensions-row">
+          <div class="dimensions">
+            <div>
+              <div class="dim-label">Šířka (cm)</div>
+              <input type="number" class="dim-input" id="widthInput" value="100" placeholder="cm">
+            </div>
+            <div>
+              <div class="dim-label">Výška (cm)</div>
+              <input type="number" class="dim-input" id="heightInput" value="150" placeholder="cm">
+            </div>
+          </div>
+        </div>
+        <div class="preview-area" id="previewArea">
+          <span class="preview-placeholder" id="previewPlaceholder">Náhled se zobrazí po vygenerování návrhu.<br>Poměr stran odpovídá zvoleným rozměrům.</span>
+          <img class="preview-image" id="previewImage" alt="Náhled banneru" style="display: none;">
+          <div class="safe-zone-overlay" id="safeZoneOverlay" aria-hidden="true">
+            <div class="safe-zone-frame" id="safeZoneFrame"></div>
+          </div>
+        </div>
+        <p class="preview-note">Finální výstup: PDF 300 DPI, 1:1, bezpečná zóna 5 cm</p>
+        <div class="actions">
+          <button class="btn btn-secondary" id="safeZoneBtn" type="button">Zobrazit bezpečnou zónu</button>
+          <button class="btn btn-success" id="approveBtn" disabled>Schválit a získat tisková data</button>
+        </div>
+        <div class="download-result" id="downloadResult" style="display: none;">
+          <p class="download-result-intro">Tisková data jsou připravena. Zvolte způsob předání:</p>
+          <div class="download-result-files">
+            <div class="download-result-file" id="downloadResultPdf">
+              <span class="download-result-label">PDF (rastr)</span>
+              <div class="download-result-actions">
+                <button type="button" class="btn btn-primary btn-copy" data-type="pdf">Zkopírovat odkaz</button>
+                <a class="btn btn-secondary download-link-btn" id="downloadLink" href="#" target="_blank" download>Stáhnout</a>
+              </div>
+            </div>
+            <div class="download-result-file" id="downloadResultSvg" style="display: none;">
+              <span class="download-result-label">SVG (křivky)</span>
+              <div class="download-result-actions">
+                <button type="button" class="btn btn-primary btn-copy" data-type="svg">Zkopírovat odkaz</button>
+                <a class="btn btn-secondary download-link-btn" id="downloadLinkSvg" href="#" target="_blank" download>Stáhnout</a>
+              </div>
+            </div>
+          </div>
+          <p class="download-result-hint">Odkaz vložte do poznámky objednávky – data si stáhneme sami do výroby. SVG doporučeno pro velké formáty (ostřejší text).</p>
+        </div>
+      </section>
+      <section class="chat-panel box">
+        <div class="chat-messages" id="chatMessages">
+          <div class="msg msg-ai" data-role="ai">
+            <div class="msg-avatar">AI</div>
+            <div class="msg-content">
+              Ahoj! Jsem tu, abych ti pomohl navrhnout banner pro velkoplošný tisk. Popiš mi, jak má banner vypadat – barvy, text, obrázky. Rozměry zvolíš výše. Výstup bude v tiskové kvalitě (PDF). Po vygenerování můžeš psát dílčí úpravy (např. „posuň logo doleva“).
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <div class="chat-attachment" id="chatAttachment"></div>
+          <div class="chat-input-actions">
+            <button type="button" class="btn btn-new-banner" id="newBannerBtn" title="Zahájit nový banner od začátku">Nový banner</button>
+          </div>
+          <div class="chat-input-wrap">
+            <label class="btn-attach" for="fileInput" title="Připojit soubor (logo, obrázek)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            </label>
+            <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden">
+            <textarea class="chat-input" id="chatInput" placeholder="Popiš svůj návrh banneru… Můžete připojit logo nebo obrázek." rows="2"></textarea>
+            <button class="btn btn-primary" id="sendBtn">Odeslat</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <div class="generation-modal" id="generationModal" aria-hidden="true">
+    <div class="generation-modal-backdrop"></div>
+    <div class="generation-modal-content" role="dialog" aria-live="polite" aria-label="Generování návrhu probíhá">
+      <div class="generation-modal-spinner"></div>
+      <h3 class="generation-modal-title">Připravuji váš návrh</h3>
+      <p class="generation-modal-status">Pracuji na náhledu…</p>
+      <p class="generation-modal-hint" id="generationModalHint"></p>
+    </div>
+  </div>
+  <div class="return-modal" id="returnModal" aria-hidden="true">
+    <div class="return-modal-backdrop"></div>
+    <div class="return-modal-content" role="dialog" aria-labelledby="returnModalTitle">
+      <h3 class="return-modal-title" id="returnModalTitle"></h3>
+      <p class="return-modal-question">Chcete se vrátit zpět do obchodu Factoryshop.cz?</p>
+      <div class="return-modal-actions">
+        <button type="button" class="btn btn-primary" id="returnModalYes">Ano</button>
+        <button type="button" class="btn btn-secondary" id="returnModalNo">Ne</button>
+      </div>
+    </div>
+  </div>
+  <script src="app.js?v=8"></script>
+</body>
+</html>

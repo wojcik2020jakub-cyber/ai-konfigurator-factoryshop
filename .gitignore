@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.local
+.env.production
+output/
+*.log
+*.pdf
+*.svg
+.DS_Store
+Thumbs.db
+unpacked_h/
+create_handoff.js
