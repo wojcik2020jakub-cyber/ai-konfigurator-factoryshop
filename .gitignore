@@ -4,9 +4,12 @@ node_modules/
 .env.production
 output/
 *.log
+*.tmp
 *.pdf
 *.svg
 .DS_Store
 Thumbs.db
+.~lock.*
 unpacked_h/
 create_handoff.js
+setup-git.bat
