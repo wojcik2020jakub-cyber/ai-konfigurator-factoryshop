@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+.env
+.env.local
+.env.production
+output
+*.pdf
+*.svg
+*.tmp
+.git
+.github
+*.docx
+vizualizace-funkci.html
+prototyp-konfigurator
