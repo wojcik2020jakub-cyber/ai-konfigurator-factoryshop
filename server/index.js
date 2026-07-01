@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const chatRoutes = require('./routes/chat');
 const approveRoutes = require('./routes/approve');
+const pdfRoutes = require('./routes/pdf');
 const { hasOpenAIKey, hasGeminiKey, isDemoMode, getModelsConfig } = require('./services/ai');
 
 const app = express();
@@ -79,6 +80,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use('/api/chat', chatRoutes);
 app.use('/api/approve', approveRoutes);
+app.use('/api/pdf', pdfRoutes);
 
 app.use((err, req, res, next) => {
   if (err && err.code === 'LIMIT_FILE_SIZE') {

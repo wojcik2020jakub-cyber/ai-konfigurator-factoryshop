@@ -524,7 +524,16 @@ chatMessages.addEventListener('click', async (e) => {
 
 fileInput.addEventListener('change', async (e) => {
   const file = e.target.files?.[0];
-  if (!file || !file.type.startsWith('image/')) return;
+  if (!file) return;
+
+  // PDF → otevři výběr stránky
+  if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+    fileInput.value = '';
+    openPdfPagePicker(file);
+    return;
+  }
+
+  if (!file.type.startsWith('image/')) return;
   try {
     const dataUrl = await resizeImageFile(file);
     attachedFile = { dataUrl, fileName: file.name };
@@ -533,6 +542,64 @@ fileInput.addEventListener('change', async (e) => {
     alert('Chyba při zpracování obrázku: ' + err.message);
     fileInput.value = '';
   }
+});
+
+// ── PDF Page Picker ───────────────────────────────────────────────────────────
+async function openPdfPagePicker(file) {
+  const modal = document.getElementById('pdfPickerModal');
+  const grid = document.getElementById('pdfPickerGrid');
+  if (!modal || !grid) return;
+
+  modal.classList.add('active');
+  modal.setAttribute('aria-hidden', 'false');
+  grid.innerHTML = '<div class="pdf-picker-loading">Zpracovávám PDF, počkejte prosím…</div>';
+
+  try {
+    const formData = new FormData();
+    formData.append('pdf', file);
+
+    const res = await fetch(`${API_BASE}/api/pdf/split`, { method: 'POST', body: formData });
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      grid.innerHTML = `<div class="pdf-picker-error">Chyba: ${escapeHtml(data.error || 'Nepodařilo se zpracovat PDF')}</div>`;
+      return;
+    }
+
+    grid.innerHTML = '';
+    data.pages.forEach(page => {
+      const div = document.createElement('div');
+      div.className = 'pdf-picker-page';
+      div.setAttribute('role', 'button');
+      div.setAttribute('tabindex', '0');
+      div.innerHTML = `
+        <img src="${page.dataUrl}" alt="Stránka ${page.page}" loading="lazy">
+        <div class="pdf-picker-page-label">Stránka ${page.page}</div>
+      `;
+      const select = () => {
+        attachedFile = { dataUrl: page.dataUrl, fileName: `pdf-strana-${page.page}.png` };
+        showAttachmentPreview(page.dataUrl, `Stránka ${page.page} z PDF`);
+        closePdfPagePicker();
+      };
+      div.addEventListener('click', select);
+      div.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') select(); });
+      grid.appendChild(div);
+    });
+  } catch (err) {
+    grid.innerHTML = `<div class="pdf-picker-error">Chyba: ${escapeHtml(err.message)}</div>`;
+  }
+}
+
+function closePdfPagePicker() {
+  const modal = document.getElementById('pdfPickerModal');
+  if (!modal) return;
+  modal.classList.remove('active');
+  modal.setAttribute('aria-hidden', 'true');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('pdfPickerClose')?.addEventListener('click', closePdfPagePicker);
+  document.getElementById('pdfPickerBackdrop')?.addEventListener('click', closePdfPagePicker);
 });
 
 const safeZoneBtn = document.getElementById('safeZoneBtn');

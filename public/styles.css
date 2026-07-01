@@ -619,3 +619,94 @@ textarea.chat-input:disabled { background: var(--color-bg); cursor: not-allowed;
   gap: var(--grid-gap);
   justify-content: center;
 }
+
+/* ── PDF Page Picker Modal ─────────────────────────────────────────────────── */
+.pdf-picker-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+}
+.pdf-picker-modal.active { display: flex; }
+.pdf-picker-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+.pdf-picker-content {
+  position: relative;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--grid-gap-lg);
+  max-width: min(90vw, 720px);
+  max-height: 80vh;
+  overflow-y: auto;
+  z-index: 1;
+  box-shadow: var(--shadow-lg);
+  animation: modalSlideIn 0.25s ease;
+}
+.pdf-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--grid-gap-lg);
+}
+.pdf-picker-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+.pdf-picker-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  color: var(--color-text-muted);
+  line-height: 1;
+  padding: 0 4px;
+}
+.pdf-picker-close:hover { color: var(--color-primary); }
+.pdf-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--grid-gap);
+}
+.pdf-picker-page {
+  cursor: pointer;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  text-align: center;
+  transition: border-color 0.15s, transform 0.1s;
+  background: var(--color-bg);
+}
+.pdf-picker-page:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
+}
+.pdf-picker-page img {
+  width: 100%;
+  display: block;
+  object-fit: contain;
+  max-height: 180px;
+}
+.pdf-picker-page-label {
+  padding: 5px;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+.pdf-picker-loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+.pdf-picker-error {
+  text-align: center;
+  padding: 24px;
+  color: var(--color-accent);
+  font-size: 0.9rem;
+}

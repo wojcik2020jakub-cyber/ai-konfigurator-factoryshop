@@ -2,7 +2,7 @@ FROM node:20-slim
 
 # Nástroje pro native addons (Sharp, canvas apod.)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3 make g++ \
+    python3 make g++ poppler-utils \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
