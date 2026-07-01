@@ -119,36 +119,100 @@
   <div class="img-editor-modal" id="imageEditorModal" aria-hidden="true">
     <div class="img-editor-backdrop" id="editorBackdrop"></div>
     <div class="img-editor-wrap" role="dialog" aria-label="Editor obrázku">
+
+      <!-- Toolbar row 1: tools + transform + zoom + history + apply -->
       <div class="img-editor-toolbar">
-        <div class="editor-tools">
-          <button type="button" class="tool-btn active" id="toolErase" title="Odebrat pozadí kliknutím">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 5H9l-7 7 7 7h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
+        <div class="editor-group">
+          <button type="button" class="tool-btn active" id="toolErase" title="Odebrat pozadí kliknutím (magic wand)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 5H9l-7 7 7 7h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"/><line x1="18" y1="9" x2="12" y2="15"/><line x1="12" y1="9" x2="18" y2="15"/></svg>
             Odebrat pozadí
           </button>
-          <button type="button" class="tool-btn" id="toolSelect" title="Vybrat oblast (oříznout)">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="4 2"/></svg>
-            Výběr oblasti
+          <button type="button" class="tool-btn" id="toolBrush" title="Štětec – malovat průhlednost">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19c-2.3 0-6.4-.2-8-2 3.5 0 4-3 4-3s-4 1-4-4c0-3.5 3.5-5 6-5h10v8.5C20 16.5 16.5 19 12 19z"/><line x1="5" y1="14" x2="8" y2="11"/></svg>
+            Štětec
+          </button>
+          <button type="button" class="tool-btn" id="toolSelect" title="Vybrat oblast pro ořez">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" stroke-dasharray="4 2"/></svg>
+            Výběr
           </button>
         </div>
-        <div class="editor-tool-options" id="toleranceRow">
-          <label class="editor-label">Tolerance</label>
-          <input type="range" id="toleranceSlider" min="0" max="100" value="30" class="editor-slider">
-          <span class="editor-label" id="toleranceValue">30</span>
+
+        <div class="editor-sep"></div>
+
+        <div class="editor-group" title="Transformace">
+          <button type="button" class="icon-btn" id="rotateCCW" title="Otočit doleva 90°">↺</button>
+          <button type="button" class="icon-btn" id="rotateCW"  title="Otočit doprava 90°">↻</button>
+          <button type="button" class="icon-btn" id="flipH"     title="Překlopit vodorovně">⇔</button>
+          <button type="button" class="icon-btn" id="flipV"     title="Překlopit svisle">⇕</button>
         </div>
-        <div class="editor-actions">
-          <button type="button" class="btn btn-secondary editor-btn" id="cropBtn" style="display:none">Oříznout výběr</button>
-          <button type="button" class="btn btn-secondary editor-btn" id="undoBtn" disabled>← Zpět</button>
-          <button type="button" class="btn btn-secondary editor-btn" id="resetBtn">Resetovat</button>
-          <button type="button" class="btn btn-success editor-btn" id="applyEditorBtn">Použít</button>
-          <button type="button" class="btn editor-btn" id="cancelEditorBtn">Zrušit</button>
+
+        <div class="editor-sep"></div>
+
+        <div class="editor-group">
+          <button type="button" class="editor-action-btn" id="smoothBtn" title="Vyhladit hrany po odebrání pozadí">Vyhladit hrany</button>
+          <button type="button" class="editor-action-btn" id="cropBtn"   style="display:none">Oříznout výběr</button>
+        </div>
+
+        <div class="editor-sep"></div>
+
+        <div class="editor-group editor-zoom">
+          <button type="button" class="icon-btn" id="zoomOut"  title="Oddálit">−</button>
+          <span id="zoomLabel" class="zoom-label">100%</span>
+          <button type="button" class="icon-btn" id="zoomIn"   title="Přiblížit">+</button>
+          <button type="button" class="icon-btn" id="zoom100"  title="Původní velikost" style="font-size:11px">1:1</button>
+        </div>
+
+        <div class="editor-sep" style="margin-left:auto"></div>
+
+        <div class="editor-group">
+          <button type="button" class="editor-action-btn" id="undoBtn" disabled>← Zpět</button>
+          <button type="button" class="editor-action-btn" id="resetBtn">Resetovat</button>
+          <button type="button" class="btn btn-success editor-btn-final" id="applyEditorBtn">Použít</button>
+          <button type="button" class="editor-action-btn editor-cancel" id="cancelEditorBtn">Zrušit</button>
         </div>
       </div>
-      <div class="img-editor-canvas-wrap">
+
+      <!-- Toolbar row 2: tool options + adjustments -->
+      <div class="img-editor-options">
+        <div class="editor-opt-group" id="toleranceRow">
+          <label class="editor-label">Tolerance</label>
+          <input type="range" id="toleranceSlider" min="0" max="100" value="30" class="editor-slider">
+          <span class="editor-val" id="toleranceValue">30</span>
+        </div>
+        <div class="editor-opt-group" id="brushSizeRow" style="display:none">
+          <label class="editor-label">Štětec</label>
+          <input type="range" id="brushSizeSlider" min="5" max="120" value="20" class="editor-slider">
+          <span class="editor-val" id="brushSizeValue">20</span>
+        </div>
+
+        <div class="editor-sep-v"></div>
+
+        <div class="editor-opt-group">
+          <label class="editor-label">Jas</label>
+          <input type="range" id="brightnessSlider" min="-100" max="100" value="0" class="editor-slider editor-slider-adj">
+          <span class="editor-val" id="brightnessValue">0</span>
+        </div>
+        <div class="editor-opt-group">
+          <label class="editor-label">Kontrast</label>
+          <input type="range" id="contrastSlider" min="-100" max="100" value="0" class="editor-slider editor-slider-adj">
+          <span class="editor-val" id="contrastValue">0</span>
+        </div>
+        <div class="editor-opt-group">
+          <label class="editor-label">Sytost</label>
+          <input type="range" id="saturationSlider" min="-100" max="100" value="0" class="editor-slider editor-slider-adj">
+          <span class="editor-val" id="saturationValue">0</span>
+        </div>
+        <button type="button" class="editor-action-btn editor-adj-apply" id="applyAdjBtn" title="Použít jas / kontrast / sytost">Použít úpravy</button>
+      </div>
+
+      <!-- Canvas -->
+      <div class="img-editor-canvas-wrap" id="editorCanvasWrap">
         <div class="img-editor-checker">
           <canvas id="editorCanvas"></canvas>
           <canvas id="editorSelCanvas"></canvas>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -164,7 +228,7 @@
     </div>
   </div>
 
-  <script src="editor.js?v=1"></script>
-  <script src="app.js?v=10"></script>
+  <script src="editor.js?v=2"></script>
+  <script src="app.js?v=11"></script>
 </body>
 </html>

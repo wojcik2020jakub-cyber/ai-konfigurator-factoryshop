@@ -724,7 +724,7 @@ textarea.chat-input:disabled { background: var(--color-bg); cursor: not-allowed;
 .img-editor-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.65);
+  background: rgba(0,0,0,0.7);
 }
 .img-editor-wrap {
   position: relative;
@@ -734,102 +734,107 @@ textarea.chat-input:disabled { background: var(--color-bg); cursor: not-allowed;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  max-width: 95vw;
-  max-height: 92vh;
+  width: min(96vw, 1200px);
+  max-height: 94vh;
   animation: modalSlideIn 0.2s ease;
 }
+
+/* Toolbar row 1 */
 .img-editor-toolbar {
   display: flex;
   align-items: center;
-  gap: var(--grid-gap);
-  padding: 10px var(--grid-gap-lg);
+  gap: 4px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--color-border);
   flex-wrap: wrap;
+  min-height: 48px;
 }
-.editor-tools {
+
+/* Toolbar row 2 */
+.img-editor-options {
   display: flex;
-  gap: 6px;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--color-border);
+  flex-wrap: wrap;
+  background: var(--color-bg);
 }
+
+.editor-group {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.editor-sep {
+  width: 1px;
+  height: 22px;
+  background: var(--color-border);
+  margin: 0 5px;
+  flex-shrink: 0;
+}
+.editor-sep-v {
+  width: 1px;
+  height: 20px;
+  background: var(--color-border);
+  margin: 0 8px;
+  flex-shrink: 0;
+}
+
+/* Tool toggle buttons */
 .tool-btn {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  gap: 5px;
+  padding: 5px 10px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background: var(--color-bg);
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--color-text);
   transition: background 0.15s, border-color 0.15s;
-}
-.tool-btn:hover { background: #f0f0f0; border-color: #bbb; }
-.tool-btn.active { background: var(--color-accent); color: white; border-color: var(--color-accent); }
-.tool-btn.active svg { stroke: white; }
-.editor-tool-options {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-left: var(--grid-gap);
-  border-left: 1px solid var(--color-border);
-}
-.editor-label {
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
   white-space: nowrap;
 }
-.editor-slider { width: 90px; }
-.editor-actions {
-  display: flex;
-  gap: 6px;
-  margin-left: auto;
-}
-.editor-btn { font-size: 0.8rem !important; padding: 6px 12px !important; }
-.img-editor-canvas-wrap {
-  overflow: auto;
-  padding: var(--grid-gap);
+.tool-btn:hover  { background: #f0f0f0; border-color: #bbb; }
+.tool-btn.active { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
+.tool-btn.active svg { stroke: #fff; }
+
+/* Icon-only buttons (rotate, flip, zoom) */
+.icon-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
-  min-height: 0;
-}
-.img-editor-checker {
-  position: relative;
-  display: inline-block;
-  background-image:
-    linear-gradient(45deg, #ccc 25%, transparent 25%),
-    linear-gradient(-45deg, #ccc 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #ccc 75%),
-    linear-gradient(-45deg, transparent 75%, #ccc 75%);
-  background-size: 16px 16px;
-  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
-  background-color: #e8e8e8;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-sm);
-}
-#editorCanvas {
-  display: block;
-  max-width: 100%;
-}
-#editorSelCanvas {
-  position: absolute;
-  top: 0; left: 0;
-  pointer-events: none;
-  width: 100%;
-  height: 100%;
-}
-
-/* Edit button in attachment preview */
-.btn-attachment-edit {
-  background: none;
+  width: 30px;
+  height: 30px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 2px 7px;
+  background: var(--color-bg);
   cursor: pointer;
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-  flex-shrink: 0;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--color-text);
   transition: background 0.15s;
 }
-.btn-attachment-edit:hover { background: #f0f0f0; color: var(--color-primary); }
+.icon-btn:hover { background: #f0f0f0; border-color: #bbb; }
+
+/* Zoom group */
+.editor-zoom { gap: 4px; }
+.zoom-label {
+  font-size: 0.75rem;
+  min-width: 38px;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+/* Action buttons (text, secondary style) */
+.editor-action-btn {
+  padding: 5px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  cursor: pointer;
+  font-size: 0.78rem;
+  color: var(--color-text);
+  white-space: nowrap;
+ 
