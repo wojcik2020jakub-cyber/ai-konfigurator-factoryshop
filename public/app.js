@@ -233,6 +233,7 @@ function showAttachmentPreview(dataUrl, fileName) {
     <div class="chat-attachment-preview">
       <img src="${dataUrl}" alt="Příloha">
       <span>${escapeHtml(fileName)}</span>
+      <button type="button" class="btn-attachment-edit" id="editAttachment" title="Upravit obrázek (odebrat pozadí, oříznout)">✏ Upravit</button>
       <span class="chat-attachment-remove" id="removeAttachment">×</span>
     </div>
   `;
@@ -240,6 +241,14 @@ function showAttachmentPreview(dataUrl, fileName) {
     attachedFile = null;
     container.innerHTML = '';
     fileInput.value = '';
+  };
+  document.getElementById('editAttachment').onclick = async () => {
+    if (!window.ImageEditor) return;
+    const result = await window.ImageEditor.open(attachedFile.dataUrl);
+    if (result) {
+      attachedFile = { dataUrl: result, fileName: attachedFile.fileName };
+      showAttachmentPreview(result, attachedFile.fileName);
+    }
   };
 }
 
